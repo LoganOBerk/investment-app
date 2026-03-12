@@ -160,21 +160,21 @@ class Cli:
 
         while True:
             # TODO: Transaction menu display
-            # TODO: Stocks input receiver (ticker & quantity) 
+            # TODO: Stock input receiver (ticker & quantity) 
 
-            stocks = ticker, quantity
+            stock = ticker, quantity
 
             isValidTicker = validator.stock_ticker_validator(ticker, isPurchase, portfolio)
             if isValidTicker != True:
                 # TODO: invalid ticker error msg
                 continue
 
-            isValidQuantity = validator.stock_quantity_validator(stocks, isPurchase, portfolio)
+            isValidQuantity = validator.stock_quantity_validator(stock, isPurchase, portfolio)
             if isValidQuantity != True:
                 # TODO: invalid quantity error msg
                 continue
 
-            isValidBalance = validator.sufficient_balance_validator(stocks, isPurchase, self.userAccount.balance)
+            isValidBalance = validator.sufficient_balance_validator(stock, isPurchase, self.userAccount.balance)
             if isValidBalance != True:
                 # TODO: invalid selection error msg
                 continue
@@ -190,10 +190,10 @@ class Cli:
 
             if selection == 1:
                 if isPurchase:
-                    serv.execute_buy(portfolio, stocks)
+                    serv.execute_buy(portfolio, stock)
                     # TODO: Msg that indicates a action was successfully performed
                 else:
-                    serv.execute_sell(portfolio, stocks)
+                    serv.execute_sell(portfolio, stock)
                     # TODO: Msg that indicates a action was successfully performed
 
             elif selection != 2:
