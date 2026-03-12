@@ -9,184 +9,193 @@ class Cli:
         self.userAccount = None
 
 
-
     def display_startup_menu(self):
-        #welcome menu display goes here
-        while(True):
-            selection = 0
-            #Selection input reciever goes here
 
-            if(selection == 1):
-                self.display_account_credential_gatherer(isNew = True)
-            elif(selection == 2):
-                self.display_account_credential_gatherer(isNew = False)
-            elif(selection == 3):
+        while True:
+            selection = 0
+            # TODO: Welcome menu display
+            # TODO: Display selection options
+            # TODO: Selection input receiver
+
+            if selection == 1:
+                self.display_account_credential_gatherer(isNew=True)
+                continue
+            elif selection == 2:
+                self.display_account_credential_gatherer(isNew=False)
+            elif selection == 3:
                 serv.exitApp()
             else:
-                #invalid input error goes here
-                print()
+                # TODO: invalid selection error msg
                 continue
 
             self.display_user_dashboard(self.userAccount)
 
 
-
     def display_account_credential_gatherer(self, isNew):  
-        selection = 0
 
         isValid = False
 
-        while(isValid != True):
-            #User Input Reciever Logic goes here
-        
+        while True:
+            # TODO: Login/Signup menu display
+            # TODO: Credential input receiver (login & password) 
+
             creds = login, password
-        
-       
+
             isValid = validator.account_validator(creds, isNew)
-            
-            if(isValid != True):
-                #Invalid creds message goes here
-                print()
 
-        
-        while(True):
-            #add user selection logic here
+            if isValid:
+                break
 
-            if(selection == 1):
-                if(isNew):
+            # TODO: invalid credentials error msg
+
+
+        while True:
+            selection = 0
+
+            # TODO: Display selection options
+            # TODO: Selection input receiver
+
+            if selection == 1:
+                if isNew:
                     self.userAccount = serv.create_account(creds)
+                    # TODO: Msg that indicates a action was successfully performed
                 else:
                     self.userAccount = serv.find_account(creds)
 
-            elif(selection != 2):
-                #invalid input message goes here
-                print()
+            elif selection != 2:
+                # TODO: invalid selection error msg
                 continue
 
             return
 
 
     def display_user_dashboard(self, userAccount):
-        
-        while(True):
+
+        while True:
             selection = 0
             numPortfolios = len(userAccount.portfolios)
 
-            #Any remaining display logic for user dashboard here
+            # TODO: User dashboard display
+            # TODO: Display selection options
+            # TODO: Selection input receiver
 
-            if(selection > 0 and selection <= numPortfolios):
+            if 0 < selection <= numPortfolios:
                 r = self.display_portfolio_contents(userAccount.portfolios[selection - 1])
-                if (r == "back"): return
-            elif(selection == numPortfolios + 1):
+                if r == "back":
+                    return
+            elif selection == numPortfolios + 1:
                 self.display_portfolio_creation_menu(userAccount)
-            elif(selection == numPortfolios + 2):
+            elif selection == numPortfolios + 2:
                 return
-            elif(selection == numPortfolios + 3):
+            elif selection == numPortfolios + 3:
                 serv.exitApp()
             else:
-                #invalid input message goes here
-                print()
-
+                # TODO: invalid selection error msg
+                pass  # Remove this once you implement
 
 
     def display_portfolio_creation_menu(self, userAccount):
-        selection = 0
-        #portfolio creation display here
-        
+
         isValid = False
 
-        while(isValid != True):
-            #User Input Reciever Logic goes here
+        while True:
+            # TODO: Portfolio creation display
+            # TODO: Portfolio name input receiver
 
             name = name
-        
-            isValid = validator.portfolio_validator(name)
-            
-            if(isValid != True):
-                #Invalid name message goes here
-                print()
-        
-        while(True):
-            #add user selection logic here
 
-            if(selection == 1):
+            isValid = validator.portfolio_validator(name)
+
+            if isValid:
+                break
+
+            # TODO: invalid name error msg
+
+
+        while True:
+            selection = 0
+
+            # TODO: Display selection options
+            # TODO: Selection input receiver
+
+            if selection == 1:
                 portfolio = serv.create_portfolio(userAccount, name)
-            elif(selection != 2):
-                #invalid input message goes here
-                print()
+                # TODO: Msg that indicates a action was successfully performed
+            elif selection != 2:
+                # TODO: invalid selection error msg
                 continue
 
             return
-        
 
 
     def display_portfolio_contents(self, portfolio):
-        while(True):
-            selection = 0
-            #portfolio display code goes here
-            vis.display_pie_chart(portfolio.getAllocation())
 
-            if(selection == 1):
-                self.display_stock_transaction_menu(portfolio = portfolio, isPurchase = True)
-            elif(selection == 2):
-                self.display_stock_transaction_menu(portfolio = portfolio, isPurchase = False)
-            elif(selection == 3):
+        while True:
+            selection = 0
+
+            # TODO: Portfolio contents display
+            # TODO: Display selection options
+            # TODO: Selection input receiver
+
+            vis.display_pie_chart(portfolio)
+
+            if selection == 1:
+                self.display_stock_transaction_menu(portfolio=portfolio, isPurchase=True)
+            elif selection == 2:
+                self.display_stock_transaction_menu(portfolio=portfolio, isPurchase=False)
+            elif selection == 3:
                 return
-            elif(selection == 4):
+            elif selection == 4:
                 return "back"
-            elif(selection == 5):
+            elif selection == 5:
                 serv.exitApp()
+            else:
+                # TODO: invalid selection error msg
+                pass  # Remove this once you implement
+
 
     def display_stock_transaction_menu(self, portfolio, isPurchase):
-        
-        selection = 0
 
-        while(True):
+        while True:
+            # TODO: Transaction menu display
+            # TODO: Stocks input receiver (ticker & quantity) 
 
-            #User Input Reciever Logic goes here
-            
             stocks = ticker, quantity
-        
-            
-            isValidTicker = validator.stock_ticker_validation(ticker, isPurchase, portfolio)
-            if(isValidTicker != True):
-                #Invalid stock message goes here
-                print()
+
+            isValidTicker = validator.stock_ticker_validator(ticker, isPurchase, portfolio)
+            if isValidTicker != True:
+                # TODO: invalid ticker error msg
                 continue
 
-            isValidQuantity = validator.stock_quantity_validation(stocks, isPurchase, portfolio)
-            if(isValidQuantity != True):
-                #Invalid stock message goes here
-                print()
+            isValidQuantity = validator.stock_quantity_validator(stocks, isPurchase, portfolio)
+            if isValidQuantity != True:
+                # TODO: invalid quantity error msg
                 continue
 
-            isValidBalance = validator.stock_price(stocks, isPurchase, self.userAccount.balance)
-            if(isValidBalance != True):
-                #Invalid stock message goes here
-                print()
+            isValidBalance = validator.sufficient_balance_validator(stocks, isPurchase, self.userAccount.balance)
+            if isValidBalance != True:
+                # TODO: invalid selection error msg
                 continue
-        
 
             break
-            
 
-        
-        while(True):
-            #add user selection logic here
 
-            if(selection == 1):
-                if(isPurchase):
+        while True:
+            selection = 0
+
+            # TODO: Display selection options
+            # TODO: Selection input receiver
+
+            if selection == 1:
+                if isPurchase:
                     serv.execute_buy(portfolio, stocks)
+                    # TODO: Msg that indicates a action was successfully performed
                 else:
                     serv.execute_sell(portfolio, stocks)
+                    # TODO: Msg that indicates a action was successfully performed
 
-            elif(selection != 2):
-                #invalid input message goes here
-                print()
+            elif selection != 2:
+                # TODO: invalid selection error msg
                 continue
 
             return
-
-
-
-
