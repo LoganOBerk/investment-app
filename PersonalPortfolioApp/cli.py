@@ -1,16 +1,16 @@
-from service import Service as serv
 from visualizer import Visualizer as vis
-from validator import Validator as validator
-
 
 class Cli:
 
-    def __init__(self):
+    def __init__(self, service, validator):
         self.userAccount = None
+        self.serv = service
+        self.validator = validator
 
+    def run(self):
+        self.display_startup_menu()
 
     def display_startup_menu(self):
-
         while True:
             selection = 0
             self.userAccount = None
@@ -25,7 +25,7 @@ class Cli:
             elif selection == 2:
                 self.display_account_credential_gatherer(isNew=False)
             elif selection == 3:
-                serv.exitApp()
+                self.serv.exitApp()
             else:
                 # TODO: invalid selection error msg
                 continue
@@ -43,7 +43,7 @@ class Cli:
 
             creds = login, password
 
-            isValid = validator.account_validator(creds, isNew)
+            isValid = self.validator.account_validator(creds, isNew)
 
             if isValid:
                 break
@@ -59,10 +59,10 @@ class Cli:
 
             if selection == 1:
                 if isNew:
-                    self.userAccount = serv.create_account(creds)
+                    self.userAccount = self.serv.create_account(creds)
                     # TODO: Msg that indicates a action was successfully performed
                 else:
-                    self.userAccount = serv.find_account(creds)
+                    self.userAccount = self.serv.find_account(creds)
 
             elif selection != 2:
                 # TODO: invalid selection error msg
@@ -90,7 +90,7 @@ class Cli:
             elif selection == numPortfolios + 2:
                 return
             elif selection == numPortfolios + 3:
-                serv.exitApp()
+                self.serv.exitApp()
             else:
                 # TODO: invalid selection error msg
                 pass  # Remove this once you implement
@@ -106,7 +106,7 @@ class Cli:
 
             name = name
 
-            isValid = validator.portfolio_validator(name)
+            isValid = self.validator.portfolio_validator(userAccount, name)
 
             if isValid:
                 break
@@ -121,7 +121,7 @@ class Cli:
             # TODO: Selection input receiver
 
             if selection == 1:
-                portfolio = serv.create_portfolio(userAccount, name)
+                self.serv.create_portfolio(userAccount, name)
                 # TODO: Msg that indicates a action was successfully performed
             elif selection != 2:
                 # TODO: invalid selection error msg
@@ -150,7 +150,7 @@ class Cli:
             elif selection == 4:
                 return "back"
             elif selection == 5:
-                serv.exitApp()
+                self.serv.exitApp()
             else:
                 # TODO: invalid selection error msg
                 pass  # Remove this once you implement
@@ -162,19 +162,19 @@ class Cli:
             # TODO: Transaction menu display
             # TODO: Stocks input receiver (ticker & quantity) 
 
-            stocks = ticker, quantity
+            stock = ticker, quantity
 
-            isValidTicker = validator.stock_ticker_validator(ticker, isPurchase, portfolio)
+            isValidTicker = self.validator.stock_ticker_validator(portfolio, ticker, isPurchase)
             if isValidTicker != True:
                 # TODO: invalid ticker error msg
                 continue
 
-            isValidQuantity = validator.stock_quantity_validator(stocks, isPurchase, portfolio)
+            isValidQuantity = self.validator.stock_quantity_validator(portfolio, stock, isPurchase)
             if isValidQuantity != True:
                 # TODO: invalid quantity error msg
                 continue
 
-            isValidBalance = validator.sufficient_balance_validator(stocks, isPurchase, self.userAccount.balance)
+            isValidBalance = self.validator.sufficient_balance_validator(self.userAccount.balance, stock, isPurchase)
             if isValidBalance != True:
                 # TODO: invalid selection error msg
                 continue
@@ -190,10 +190,10 @@ class Cli:
 
             if selection == 1:
                 if isPurchase:
-                    serv.execute_buy(portfolio, stocks)
+                    self.serv.execute_buy(self.userAccount, portfolio, stock)
                     # TODO: Msg that indicates a action was successfully performed
                 else:
-                    serv.execute_sell(portfolio, stocks)
+                    self.serv.execute_sell(self.userAccount, portfolio, stock)
                     # TODO: Msg that indicates a action was successfully performed
 
             elif selection != 2:
@@ -201,3 +201,6 @@ class Cli:
                 continue
 
             return
+
+
+    
