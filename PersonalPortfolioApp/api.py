@@ -1,4 +1,7 @@
 import yfinance as yf
 
 class Api:
-    pass
+
+    @staticmethod
+    def get_stock_price(ticker):
+        pass
