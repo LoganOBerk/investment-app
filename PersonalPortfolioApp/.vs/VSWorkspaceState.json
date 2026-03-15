@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\domain_models",
+    "\\interface_layer",
+    "\\persistence_layer",
+    "\\service_layer"
   ],
-  "SelectedNode": "\\PersonalPortfolioApp.slnx",
+  "SelectedNode": "\\service_layer\\service.py",
   "PreviewInSolutionExplorer": false
 }

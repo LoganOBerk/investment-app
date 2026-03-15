@@ -137,7 +137,7 @@ class Service:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def populate_user_account(self, user_account : User, login : str):
+    def populate_user_account(self, user_account : User, login : str) -> None:
         account_info = self.retrieve_stored_data(login)
 
         stored_user, stored_portfolios, stored_stocks = account_info
@@ -151,7 +151,7 @@ class Service:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def populate_user_portfolios(self, user_portfolios : dict[str, Portfolio], stored_portfolios : list[tuple], stored_stocks : dict[int, list[tuple]]):
+    def populate_user_portfolios(self, user_portfolios : dict[str, Portfolio], stored_portfolios : list[tuple], stored_stocks : dict[int, list[tuple]]) -> None:
 
         for portfolio in stored_portfolios:
 
@@ -167,7 +167,7 @@ class Service:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def populate_portfolio_stocks(self, portfolio_stocks : dict[str, Stock], stored_portfolio_stocks : list[tuple]):
+    def populate_portfolio_stocks(self, portfolio_stocks : dict[str, Stock], stored_portfolio_stocks : list[tuple]) -> None:
 
         for stock in stored_portfolio_stocks:
 
@@ -183,5 +183,5 @@ class Service:
     # PRECONDITION:
     # POSTCONDITION:
     @staticmethod
-    def exitApp():
+    def exitApp() -> None:
         sys.exit(0)
