@@ -1,3 +1,5 @@
+from persistence_layer import DatabaseError
+
 # PURPOSE:
 class Cli:
 
@@ -76,12 +78,18 @@ class Cli:
             # TODO: Selection input receiver
 
             if selection == 1:
-                if new:
-                    self.user_account = self.serv.create_account(creds)
-                    # TODO: Msg that indicates a action was successfully performed
-                else:
-                    self.user_account = self.serv.find_account(login)
+                try:
 
+                    if new:
+                        self.user_account = self.serv.create_account(creds)
+                        # TODO: Msg that indicates a action was successfully performed
+                    else:
+                        self.user_account = self.serv.find_account(login)
+
+                except DatabaseError as e:
+                    print(f"Action Failed: {str(e)}")
+                    continue
+                    
             elif selection != 2:
                 # TODO: invalid selection error msg
                 continue
@@ -152,8 +160,14 @@ class Cli:
             # TODO: Selection input receiver
 
             if selection == 1:
-                self.serv.fund_account(user_account, funds_request)
-                # TODO: Msg that indicates a action was successfully performed
+                try:
+
+                    self.serv.fund_account(user_account, funds_request)
+                    # TODO: Msg that indicates a action was successfully performed
+
+                except DatabaseError as e:
+                    print(f"Action Failed: {str(e)}")
+                    continue
             elif selection != 2:
                 # TODO: invalid selection error msg
                 continue
@@ -189,12 +203,18 @@ class Cli:
             # TODO: Selection input receiver
 
             if selection == 1:
-                if(create):
-                    self.serv.create_portfolio(user_account, name_request)
-                    # TODO: Msg that indicates a action was successfully performed
-                else:
-                    self.serv.remove_portfolio(user_account, name_request)
-                    # TODO: Msg that indicates a action was successfully performed
+                try:
+
+                    if(create):
+                        self.serv.create_portfolio(user_account, name_request)
+                        # TODO: Msg that indicates a action was successfully performed
+                    else:
+                        self.serv.remove_portfolio(user_account, name_request)
+                        # TODO: Msg that indicates a action was successfully performed
+
+                except DatabaseError as e:
+                    print(f"Action Failed: {str(e)}")
+                    continue
             elif selection != 2:
                 # TODO: invalid selection error msg
                 continue
@@ -269,12 +289,19 @@ class Cli:
             # TODO: Selection input receiver
 
             if selection == 1:
-                if purchase:
-                    self.serv.execute_buy(self.user_account, portfolio, shares_requested)
-                    # TODO: Msg that indicates a action was successfully performed
-                else:
-                    self.serv.execute_sell(self.user_account, portfolio, shares_requested)
-                    # TODO: Msg that indicates a action was successfully performed
+
+                try:
+
+                    if purchase:
+                        self.serv.execute_buy(self.user_account, portfolio, shares_requested)
+                        # TODO: Msg that indicates a action was successfully performed
+                    else:
+                        self.serv.execute_sell(self.user_account, portfolio, shares_requested)
+                        # TODO: Msg that indicates a action was successfully performed
+
+                except DatabaseError as e:
+                    print(f"Action Failed: {str(e)}")
+                    continue
 
             elif selection != 2:
                 # TODO: invalid selection error msg

@@ -19,7 +19,7 @@ class Service:
     # POSTCONDITION:
     def create_account(self, credentials : tuple[str, str]) -> User:
         # TODO: Add user to the db
-        # TODO: Create user and return object
+        # TODO: Create user
         pass
 
 
@@ -28,7 +28,8 @@ class Service:
     # PRECONDITION:
     # POSTCONDITION:
     def find_account(self, login : str) -> User:
-        # TODO: Create, Populate and return user object
+        # TODO: Create user object
+        # TODO: Populate user object
         pass
 
 
@@ -37,9 +38,9 @@ class Service:
     # PRECONDITION:
     # POSTCONDITION:
     def fund_account(self, user_account : User, funds_request : float) -> None:
-        user_account.add_funds(funds_request)
         #TODO: update db funds
-        pass
+        user_account.add_funds(funds_request)
+        
 
 
     # INPUT:
@@ -47,8 +48,9 @@ class Service:
     # PRECONDITION:
     # POSTCONDITION:
     def create_portfolio(self, user_account : User, portfolio_name : str) -> None:
+        p_id = self.db.insert_portfolio(user_account.id, portfolio_name)
         # TODO: add new empty portfolio to user_account object
-        user_account.portfolios[portfolio_name].id = self.db.insert_portfolio(user_account.id, portfolio_name)
+        user_account.portfolios[portfolio_name].id = p_id
 
 
     # INPUT:
@@ -56,8 +58,8 @@ class Service:
     # PRECONDITION:
     # POSTCONDITION:
     def remove_portfolio(self, user_account : User, portfolio_name : str) -> None:
-        user_account.remove_portfolio(portfolio_name)
         #TODO: call remove function for removing portfolio from db
+        user_account.remove_portfolio(portfolio_name)
 
 
     # INPUT:
@@ -67,16 +69,22 @@ class Service:
     def execute_buy(self, user_account : User, portfolio : Portfolio, shares_requested : tuple[str, int]) -> None:
         # TODO: call api to get stock price
         # TODO: subtract funds from user account
-        r = portfolio.buy_shares(shares_requested)
-        s_id = r[0]
-        flag = r[1]
+        
+        ticker, quantiy = shares_requested
 
-        if flag == "new":
-            portfolio.stocks[shares_requested[0]].id = self.db.insert_stock(portfolio.id, shares_requested)
-        else:
+        s_id = None
+
+        if portfolio.has_stock(ticker):
             # TODO: update the db
             pass
+        else:
+             s_id = self.db.insert_stock(portfolio.id, shares_requested)
+             
+        portfolio.buy_shares(shares_requested)
 
+        if s_id != None:
+            portfolio.stocks[ticker].id = s_id
+        
 
     # INPUT:
     # OUTPUT:
@@ -86,18 +94,17 @@ class Service:
         # TODO: call api to get stock price
         # TODO: add funds to user account
         # TODO: remove the stock(s) from the portfolio
-        r = portfolio.sell_shares(shares_requested)
-        s_id = r[0]
-        flag = r[1]
+        
+        ticker, quantity = shares_requested
 
-        if flag == "removed":
+        if portfolio.has_stock(ticker) and quantity == portfolio.stocks[ticker].quantity:
             # TODO: remove from the db
             pass
         else:
             # TODO: update the db
             pass
 
-        pass
+        portfolio.sell_shares(shares_requested)
 
 
     # INPUT:
@@ -113,48 +120,62 @@ class Service:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def populate_user(self, user_account : User, login : str) -> None:
+    def retrieve_stored_data(self, login : str) -> tuple[tuple, list[tuple], dict[int, list[tuple]]]:
+       
         user_info = self.db.pull_user(login)
+        stored_portfolios = self.db.pull_portfolios(user_info[0])
+        stored_stocks = {}
+        for portfolio in stored_portfolios:
+            p_id = portfolio[0]
+            stored_stocks[p_id] = self.db.pull_stocks(p_id)
+        
 
-        user_account.id = user_info[0]
-        user_account.login = user_info[1]
-        user_account.password = user_info[2]
-        user_account.balance = user_info[3]
-
-        self.populate_user_portfolios(user_account.id, user_account.portfolios)
+        return user_info, stored_portfolios, stored_stocks
 
 
     # INPUT:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def populate_user_portfolios(self, user_id : int, portfolios : dict[str, Portfolio]) -> None:
-        stored_portfolios = self.db.pull_portfolios(user_id)
+    def populate_user_account(self, user_account : User, login : str):
+        account_info = self.retrieve_stored_data(login)
+
+        stored_user, stored_portfolios, stored_stocks = account_info
+
+        user_account.id, user_account.login, user_account.password, user_account.balance = stored_user
+
+        self.populate_user_portfolios(user_account.portfolios, stored_portfolios, stored_stocks)
+        
+
+    # INPUT:
+    # OUTPUT:
+    # PRECONDITION:
+    # POSTCONDITION:
+    def populate_user_portfolios(self, user_portfolios : dict[str, Portfolio], stored_portfolios : list[tuple], stored_stocks : dict[int, list[tuple]]):
 
         for portfolio in stored_portfolios:
 
             p_id = portfolio[0]
             p_name = portfolio[1]
 
-            portfolios[p_name] = Portfolio(id=p_id,name=p_name)
+            user_portfolios[p_name] = Portfolio(id=p_id,name=p_name)
 
-            self.populate_portfolio_stocks(p_id, portfolios[p_name].stocks)
-
+            self.populate_portfolio_stocks(user_portfolios[p_name].stocks, stored_stocks[p_id])
+    
 
     # INPUT:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def populate_portfolio_stocks(self, portfolio_id : int, stocks : dict[str, Stock]) -> None:
-        stored_stocks = self.db.pull_stocks(portfolio_id)
+    def populate_portfolio_stocks(self, portfolio_stocks : dict[str, Stock], stored_portfolio_stocks : list[tuple]):
 
-        for stock in stored_stocks:
+        for stock in stored_portfolio_stocks:
 
             s_id = stock[0]
             s_ticker = stock[1]
             s_quantity = stock[2]
 
-            stocks[s_ticker] = Stock(id=s_id, ticker=s_ticker, quantity=s_quantity)
+            portfolio_stocks[s_ticker] = Stock(id=s_id, ticker=s_ticker, quantity=s_quantity)
 
 
     # INPUT:

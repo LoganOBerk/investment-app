@@ -1,4 +1,9 @@
 import sqlite3 as sqlite
+from sqlite3 import Error as SqliteError
+
+# PURPOSE:
+class DatabaseError(Exception):
+    pass
 
 
 # PURPOSE:
@@ -56,7 +61,13 @@ class Database:
             );
         '''
 
-        cursor.executescript(create_user_table + create_portfolios_table + create_stocks_table)
+        try:
+
+            cursor.executescript(create_user_table + create_portfolios_table + create_stocks_table)
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"build_database failed: {e}") from e
 
 
     # INPUT:
@@ -74,7 +85,14 @@ class Database:
             WHERE id = ?
         '''
 
-        cursor.execute(pull_user, (u_id,))
+        try:
+
+            cursor.execute(pull_user, (u_id,))
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"pull_user failed: {e}") from e
+        
 
         return cursor.fetchone()
 
@@ -92,7 +110,13 @@ class Database:
             WHERE user_id = ?
         '''
 
-        cursor.execute(pull_portfolios, (user_id,))
+        try:
+
+            cursor.execute(pull_portfolios, (user_id,))
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"pull_portfolios failed: {e}") from e
 
         return cursor.fetchall()
 
@@ -110,7 +134,13 @@ class Database:
             WHERE portfolio_id = ?
         '''
 
-        cursor.execute(pull_stocks, (portfolio_id,))
+        try:
+
+            cursor.execute(pull_stocks, (portfolio_id,))
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"pull_stocks failed: {e}") from e
 
         return cursor.fetchall()
 
@@ -127,8 +157,14 @@ class Database:
             VALUES (?, ?)
         '''
 
-        cursor.execute(insert_user, credentials)
-        self.conn.commit()
+        try:
+
+            cursor.execute(insert_user, credentials)
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"insert_user failed: {e}") from e
 
         return cursor.lastrowid
 
@@ -145,8 +181,14 @@ class Database:
             VALUES (?, ?)
         '''
 
-        cursor.execute(insert_portfolio, (user_id, portfolio_name))
-        self.conn.commit()
+        try:
+
+            cursor.execute(insert_portfolio, (user_id, portfolio_name))
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"insert_portfolio failed: {e}") from e
 
         return cursor.lastrowid
 
@@ -163,8 +205,14 @@ class Database:
             WHERE id = ?
         '''
 
-        cursor.execute(delete_portfolio, (portfolio_id,))
-        self.conn.commit()
+        try:
+
+            cursor.execute(delete_portfolio, (portfolio_id,))
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"delete_portfolio failed: {e}") from e
 
 
 
@@ -182,8 +230,14 @@ class Database:
 
         ticker, quantity = shares_requested
 
-        cursor.execute(insert_stock, (portfolio_id, ticker, quantity))
-        self.conn.commit()
+        try:
+
+            cursor.execute(insert_stock, (portfolio_id, ticker, quantity))
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"insert_stock failed: {e}") from e
 
         return cursor.lastrowid
 
@@ -200,8 +254,14 @@ class Database:
             WHERE id = ?
         '''
 
-        cursor.execute(delete_stock, (stock_id,))
-        self.conn.commit()
+        try:
+
+            cursor.execute(delete_stock, (stock_id,))
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"delete_stock failed: {e}") from e
 
 
     # INPUT:
@@ -217,8 +277,14 @@ class Database:
             WHERE id = ?
         '''
 
-        cursor.execute(update_stock, (quantity, stock_id))
-        self.conn.commit()
+        try:
+
+            cursor.execute(update_stock, (quantity, stock_id))
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"update_stock failed: {e}") from e
 
 
     # INPUT:
@@ -234,9 +300,14 @@ class Database:
             WHERE id = ?
         '''
 
-        cursor.execute(update_stock, (funds_request, user_id))
-        self.conn.commit()
+        try:
 
+            cursor.execute(update_stock, (funds_request, user_id))
+            self.conn.commit()
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"update_funds failed: {e}") from e
 
     # INPUT:
     # OUTPUT:
@@ -253,7 +324,13 @@ class Database:
 
         key = (login,)
 
-        cursor.execute(resolve_id, key)
+        try:
+
+            cursor.execute(resolve_id, key)
+
+        except SqliteError as e:
+            self.conn.rollback()
+            raise DatabaseError(f"resolve_user_id failed: {e}") from e
 
         user_info = cursor.fetchone()
 
