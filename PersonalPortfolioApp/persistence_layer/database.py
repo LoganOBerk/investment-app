@@ -8,11 +8,6 @@ class DatabaseError(Exception):
 
 # PURPOSE:
 class Database:
-
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
     def __init__(self, source):
         self.source = source
         self.conn = sqlite.connect(source)

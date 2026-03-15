@@ -2,7 +2,6 @@ from .portfolio import Portfolio
 
 # PURPOSE:
 class User:
-
     def __init__(self, id=None, *, login, password, balance, portfolios: dict[str, Portfolio] = None):
         self.id = id
         self.login = login

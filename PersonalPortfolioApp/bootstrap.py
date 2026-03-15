@@ -8,11 +8,6 @@ from interface_layer import *
 
 # PURPOSE:
 class App:
-
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
     def __init__(self, testing=False):
         self.db = None
         self.serv = None

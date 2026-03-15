@@ -2,7 +2,6 @@ from .stock import Stock
 
 # PURPOSE:
 class Portfolio:
-
     def __init__(self, id=None, *, name, stocks: dict[str, Stock] = None):
         self.id = id
         self.name = name

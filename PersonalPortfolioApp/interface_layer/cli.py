@@ -2,11 +2,6 @@ from persistence_layer import DatabaseError
 
 # PURPOSE:
 class Cli:
-
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
     def __init__(self, service, validator, visualizer):
         self.user_account = None
         self.serv = service

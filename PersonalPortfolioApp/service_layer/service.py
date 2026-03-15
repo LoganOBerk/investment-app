@@ -4,11 +4,6 @@ from domain_models import *
 
 # PURPOSE:
 class Service:
-
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
     def __init__(self, database):
         self.db = database
 

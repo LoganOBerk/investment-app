@@ -1,6 +1,5 @@
 # PURPOSE:
 class Stock:
-
     def __init__(self, id=None, *, ticker, quantity):
         self.id = id
         self.ticker = ticker

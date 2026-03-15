@@ -4,7 +4,6 @@ import pandas as pd
 
 # PURPOSE:
 class Visualizer:
-
     def __init__(self):
         self.fig, self.ax = plt.subplots()
         

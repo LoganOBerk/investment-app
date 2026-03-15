@@ -3,11 +3,6 @@ from integration_layer import Api as api
 
 # PURPOSE:
 class Validator:
-
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
     def __init__(self, service):
         self.serv = service
 
