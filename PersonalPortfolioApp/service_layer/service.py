@@ -64,7 +64,7 @@ class Service:
         # TODO: call api to get stock price
         # TODO: subtract funds from user account
         
-        ticker, quantiy = shares_requested
+        ticker, quantity = shares_requested
 
         s_id = None
 
