@@ -1,3 +1,4 @@
+from importlib.resources import Package
 import sys
 from collections import defaultdict
 from domain_models import *
@@ -110,6 +111,18 @@ class Service:
         u_id = self.db.resolve_user_id(login)
         return u_id != None
 
+
+    # INPUT:
+    # OUTPUT:
+    # PRECONDITION:
+    # POSTCONDITION:
+    def package_portfolio_data(self, portfolio : Portfolio) -> list[dict[str, str | int]]:
+        packaged_data = []
+
+        for stock in portfolio.stocks.values():
+            packaged_data.append({"ticker": stock.ticker, "quantity": stock.quantity})
+
+        return packaged_data
 
     # INPUT:
     # OUTPUT:

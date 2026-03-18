@@ -229,8 +229,8 @@ class Cli:
             # TODO: Display selection options
             # TODO: Selection input receiver
             
-            data = [{"ticker": s.ticker, "quantity": s.quantity} for s in portfolio.stocks.values()]
-            self.vis.display_pie_chart(data)
+            packaged_data = self.serv.package_portfolio_data(portfolio)
+            self.vis.display_pie_chart(packaged_data)
 
             if selection == 1:
                 self.display_stock_transaction_menu(portfolio, purchase=True)
