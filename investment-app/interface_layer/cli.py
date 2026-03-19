@@ -224,7 +224,6 @@ class Cli:
     def display_portfolio_contents(self, portfolio):
         while True:
             selection = 0
-            self.vis.close_chart()
 
             # TODO: Portfolio contents display
             # TODO: Display selection options
@@ -235,11 +234,15 @@ class Cli:
 
             if selection == 1:
                 self.display_stock_transaction_menu(portfolio, purchase=True)
+                self.vis.close_chart()
             elif selection == 2:
                 self.display_stock_transaction_menu(portfolio, purchase=False)
+                self.vis.close_chart()
             elif selection == 3:
+                self.vis.close_chart()
                 return
             elif selection == 4:
+                self.vis.close_chart()
                 return "back"
             elif selection == 5:
                 self.serv.exit_app()
