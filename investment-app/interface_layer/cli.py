@@ -224,6 +224,7 @@ class Cli:
     def display_portfolio_contents(self, portfolio):
         while True:
             selection = 0
+            self.vis.close_chart()
 
             # TODO: Portfolio contents display
             # TODO: Display selection options
@@ -245,6 +246,8 @@ class Cli:
             else:
                 # TODO: invalid selection error msg
                 pass  # Remove this once you implement
+           
+            
 
 
     # INPUT:
