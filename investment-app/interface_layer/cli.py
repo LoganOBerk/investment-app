@@ -224,13 +224,13 @@ class Cli:
     def display_portfolio_contents(self, portfolio):
         while True:
             selection = 0
-
+            packaged_data = self.serv.package_portfolio_data(portfolio)
+            
+            self.vis.display_pie_chart(packaged_data)
             # TODO: Portfolio contents display
             # TODO: Display selection options
             # TODO: Selection input receiver
-            
-            packaged_data = self.serv.package_portfolio_data(portfolio)
-            self.vis.display_pie_chart(packaged_data)
+           
 
             if selection == 1:
                 self.vis.close_chart()
