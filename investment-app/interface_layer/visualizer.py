@@ -33,6 +33,7 @@ class Visualizer:
     # OUTPUT:
     # PRECONDITION:
     # POSTCONDITION:
-    def close_chart(self) -> None: 
-       plt.close(self.fig)
-       self.shown = False
+    def close_chart(self) -> None:
+        if self.shown:
+            plt.close(self.fig)
+            self.shown = False
