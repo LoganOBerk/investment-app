@@ -233,11 +233,11 @@ class Cli:
             self.vis.display_pie_chart(packaged_data)
 
             if selection == 1:
+                self.vis.close_chart()
                 self.display_stock_transaction_menu(portfolio, purchase=True)
-                self.vis.close_chart()
             elif selection == 2:
-                self.display_stock_transaction_menu(portfolio, purchase=False)
                 self.vis.close_chart()
+                self.display_stock_transaction_menu(portfolio, purchase=False)
             elif selection == 3:
                 self.vis.close_chart()
                 return
