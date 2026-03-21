@@ -6,7 +6,8 @@ from validation_layer import Validator
 from interface_layer import *
 
 
-# PURPOSE:
+# PURPOSE: To provide a high level initialization method,
+# allows for clean dependancy injection and easy swaps between test mode
 class App:
     def __init__(self, testing=False):
         self.db = None
@@ -17,10 +18,11 @@ class App:
         self.init(testing=testing)
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: bool to indicate testing status
+    # OUTPUT: None
+    # PRECONDITION: Default App object is constructed
+    # POSTCONDITION: App is initialized based on the testing bool,
+    # dependancies are properly injected 
     def init(self, testing=False) -> None:
 
         db_dir = 'app_data'
@@ -47,10 +49,10 @@ class App:
         self.display = Cli(self.serv, self.val, self.vis)
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: None
+    # OUTPUT: None
+    # PRECONDITION: App object is correctly initialized with proper dependancies
+    # POSTCONDITION: The application starts running
     def run(self) -> None:
         self.display.execute()
 

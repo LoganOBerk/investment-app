@@ -1,12 +1,12 @@
 import sqlite3 as sqlite
 from sqlite3 import Error as SqliteError
 
-# PURPOSE:
+# PURPOSE: To add a general wrapper for database related errors
 class DatabaseError(Exception):
     pass
 
 
-# PURPOSE:
+# PURPOSE: To provide a clean layer of abstraction for database related operations and initialization
 class Database:
     def __init__(self, source):
         self.source = source
@@ -15,10 +15,10 @@ class Database:
         self.build_database()
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: None
+    # OUTPUT: None
+    # PRECONDITION: Database connection is established with source file and foreign keys are ON
+    # POSTCONDITION: The database is properly initialized to the correct structure
     def build_database(self):
         cursor = self.conn.cursor()
 
@@ -65,10 +65,10 @@ class Database:
             raise DatabaseError(f"build_database failed: {e}") from e
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: string representing user login
+    # OUTPUT: tuple of id, login, balance from database
+    # PRECONDITION: login exists in the database, see postcondition of build_database
+    # POSTCONDITION: a user is attempted to be pulled from the database
     def pull_user(self, login : str) -> tuple:
 
         cursor = self.conn.cursor()
@@ -91,10 +91,10 @@ class Database:
         return cursor.fetchone()
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing user id
+    # OUTPUT: a list of all user portfolios in tuple; id, name
+    # PRECONDITION: user id exists in the database
+    # POSTCONDITION: all user portfolios are attempted to be pulled from database
     def pull_portfolios(self, user_id : int) -> list[tuple]:
         cursor = self.conn.cursor()
 
@@ -115,10 +115,10 @@ class Database:
         return cursor.fetchall()
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing user id
+    # OUTPUT: a list of all stocks that user owns in tuple; portfolio_id, id, ticker, quantity
+    # PRECONDITION: user id exists in database
+    # POSTCONDITION: all user stocks are attempted to be pulled from database
     def pull_stocks(self, user_id : int) -> list[tuple]:
         cursor = self.conn.cursor()
 
@@ -140,10 +140,10 @@ class Database:
         return cursor.fetchall()
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: tuple of two strings representing user credentials
+    # OUTPUT: int representing user id
+    # PRECONDITION: credentials are valid based on validation criteria (see validator)
+    # POSTCONDITION: an attempt is made to insert a user with credentials into the database
     def insert_user(self, credentials : tuple[str, str]) -> int:
         cursor = self.conn.cursor()
 
@@ -164,10 +164,10 @@ class Database:
         return cursor.lastrowid
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing user id and int representing portfolio name
+    # OUTPUT: int representing the portfolio id of the new portfolio
+    # PRECONDITION: user id exists in the database and portfolio name has been validated as unique
+    # POSTCONDITION: new portfolio is attempted to be added to the database
     def insert_portfolio(self, user_id : int, portfolio_name : str) -> int:
         cursor = self.conn.cursor()
 
@@ -188,10 +188,10 @@ class Database:
         return cursor.lastrowid
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing the portfolio id
+    # OUTPUT: None
+    # PRECONDITION: portfolio exists in the database
+    # POSTCONDITION: an attempt to remove the portfolio from the database is made
     def delete_portfolio(self, portfolio_id : int) -> None:
         cursor = self.conn.cursor()
 
@@ -211,10 +211,10 @@ class Database:
 
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing portfolio id and tuple of string and int representing requested shares ticker, quantity
+    # OUTPUT: int representing user id
+    # PRECONDITION: portfolio exists in the database and shares requested have been validated
+    # POSTCONDITION: an attempt to insert stock into the database is made
     def insert_stock(self, portfolio_id : int, shares_requested : tuple[str, int]) -> int:
         cursor = self.conn.cursor()
 
@@ -237,10 +237,10 @@ class Database:
         return cursor.lastrowid
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing stock id 
+    # OUTPUT: None
+    # PRECONDITION: stock exists in database
+    # POSTCONDITION: an attempt to delete the stock from the database is made
     def delete_stock(self, stock_id : int) -> None:
         cursor = self.conn.cursor()
 
@@ -259,10 +259,10 @@ class Database:
             raise DatabaseError(f"delete_stock failed: {e}") from e
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing a stock id, int representing a quantity to add
+    # OUTPUT: None
+    # PRECONDITION: stock exists in database
+    # POSTCONDITION: an attempt to delete the stock from the database is made
     def update_stock(self, stock_id : int, quantity : int) -> None:
         cursor = self.conn.cursor()
 
@@ -282,10 +282,10 @@ class Database:
             raise DatabaseError(f"update_stock failed: {e}") from e
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: int representing a user id, float representing funds to add to the account
+    # OUTPUT: None
+    # PRECONDITION: user exists in database, if funds request is negative the balance will not go negative
+    # POSTCONDITION: a user balance database update is attempted
     def update_funds(self, user_id : int, funds_request : float) -> None:
         cursor = self.conn.cursor()
 
@@ -305,11 +305,11 @@ class Database:
             raise DatabaseError(f"update_funds failed: {e}") from e
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
-    def resolve_credentials(self, credentials : tuple[str, str]):
+    # INPUT: tuple of two stirngs representing user credentials; login, password
+    # OUTPUT: None
+    # PRECONDITION: credentials pass basic validation
+    # POSTCONDITION: an attempt to resolve a user id from database given credentials is made
+    def resolve_credentials(self, credentials : tuple[str, str]) -> None | int:
         cursor = self.conn.cursor()
 
         resolve_id = '''

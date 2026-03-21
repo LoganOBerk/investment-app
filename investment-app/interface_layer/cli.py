@@ -1,6 +1,6 @@
 from service_layer import ServiceError
 
-# PURPOSE:
+# PURPOSE: To provide a basic command line interface that maintains the program control flow and maintain user state
 class Cli:
     def __init__(self, service, validator, visualizer):
         self.user_account = None
@@ -9,18 +9,18 @@ class Cli:
         self.vis = visualizer
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: None
+    # OUTPUT: None
+    # PRECONDITION: The cli has all the proper depedancies it needs to execute
+    # POSTCONDITION: The cli starts execution
     def execute(self):
         self.display_startup_menu()
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: None
+    # OUTPUT: None
+    # PRECONDITION: see execute method
+    # POSTCONDITION: startup menu is displayed
     def display_startup_menu(self):
         while True:
             selection = 0
@@ -44,10 +44,10 @@ class Cli:
             self.display_user_dashboard(self.user_account)
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: bool identifying if the account is being newly created or not
+    # OUTPUT: None
+    # PRECONDITION: bool is either True or False, see execute method
+    # POSTCONDITION: credential gathering menu is properly displayed
     def display_account_credential_gatherer(self, new : bool):
 
         valid = False
@@ -92,10 +92,10 @@ class Cli:
             return
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: User 
+    # OUTPUT: None
+    # PRECONDITION: in memory user is properly populated
+    # POSTCONDITION: user specific dashboard is displayed
     def display_user_dashboard(self, user_account):
 
         while True:
@@ -127,10 +127,10 @@ class Cli:
                 pass  # Remove this once you implement
 
     
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: User
+    # OUTPUT: None
+    # PRECONDITION: in memory user is properly populated
+    # POSTCONDITION: user specific dashboard is displayed
     def display_funding_menu(self, user_account):
 
         valid = False
@@ -169,10 +169,10 @@ class Cli:
 
             return
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: User and bool where the bool represents if the user selected to create or remove a portfolio
+    # OUTPUT: None
+    # PRECONDITION: in memory user is properly populated, create is either True or False
+    # POSTCONDITION: portfolio modification menu is properly displayed
     def display_portfolio_modification_menu(self, user_account, create : bool):
 
         valid = False
@@ -217,10 +217,10 @@ class Cli:
             return
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: Portfolio
+    # OUTPUT: None
+    # PRECONDITION: for any user portfolio its in memory model is established
+    # POSTCONDITION: portfolio contents are properly displayed
     def display_portfolio_contents(self, portfolio):
         while True:
             selection = 0
@@ -251,10 +251,10 @@ class Cli:
             
 
 
-    # INPUT:
-    # OUTPUT:
-    # PRECONDITION:
-    # POSTCONDITION:
+    # INPUT: Portfolio and bool which indicates if a purchase is occuring or a sale
+    # OUTPUT: None
+    # PRECONDITION: for any user portfolio the in memory model is established, purchase is either True or False
+    # POSTCONDITION: stock transaction menu is properly displayed
     def display_stock_transaction_menu(self, portfolio, purchase : bool):
 
         while True:
