@@ -7,7 +7,7 @@ class Validator:
         self.serv = service
 
 
-    # INPUT: tuple of two strings representing login, password 
+    # INPUT: tuple of two strings representing login, password, bool determining if account is being newly created or not
     # OUTPUT: bool determining if user credentials are valid
     # PRECONDITION: None
     # POSTCONDITION: credentials have been validated
