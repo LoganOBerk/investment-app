@@ -1,0 +1,56 @@
+================================================================
+         PROGRAM DOCUMENTATION GUIDELINES
+================================================================
+
+Fields marked "if N/A - None" must still appear with the literal
+value None so readers know the field was considered.
+
+----------------------------------------------------------------
+  CLASSES
+----------------------------------------------------------------
+
+#PURPOSE:
+#    -<ClassName> provides <X> abstraction
+#    -<why the abstraction exists>
+
+
+----------------------------------------------------------------
+  FUNCTIONS
+----------------------------------------------------------------
+
+#INPUT:          if N/A - None
+#    -<param_name>(type); <what it represents>
+ 
+#OUTPUT:         if N/A - None
+#    -<var_name>(type); <what it represents>
+ 
+#PRECONDITION:   if N/A - None
+#    -<param_name>; <value constraint>
+ 
+#POSTCONDITION:  if N/A - None
+#    -<param or state>; <observable guarantee after return>
+ 
+#RAISES:         if N/A - None
+#    -<ExceptionType>; <condition that triggers it>
+ 
+def function_name(param_name: type) -> type:
+	return var_name
+    	
+
+----------------------------------------------------------------
+  STYLE RULES
+----------------------------------------------------------------
+
+  Semicolons    Separate name/type from description with "; "
+
+  Indentation   Labels flush-left; entries indented with TAB
+
+  Types         Use Python builtins (int, str, list, dict, None, etc.)
+                or typing module (Any, Optional, List[int], etc.)
+
+  Constraints   State value constraints, not types
+                ("n > 0" not "must be int")
+
+  Guarantees    Describe observable state, not implementation details
+
+  Be brief      Short phrase per entry, not full sentences

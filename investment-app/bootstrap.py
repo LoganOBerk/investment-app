@@ -1,5 +1,4 @@
-import os
-
+from pathlib import Path
 from persistence_layer import Database
 from service_layer import Service
 from validation_layer import Validator
@@ -18,20 +17,27 @@ class App:
         self.init(testing=testing)
 
 
+    # INPUT: 
+    # OUTPUT:
+    # PRECONDITION: 
+    # POSTCONDITION:
+    def establish_path(self, db_source : str) -> Path:
+        base_dir = Path(__file__).parent
+
+        db_dir = base_dir / 'app_data'
+
+        db_dir.mkdir(exist_ok = True)
+
+        return db_dir / db_source
+
+
     # INPUT: bool to indicate testing status
     # OUTPUT: None
     # PRECONDITION: Default App object is constructed
     # POSTCONDITION: App is initialized based on the testing bool,
     # dependancies are properly injected 
     def init(self, testing=False) -> None:
-
-        db_dir = 'app_data'
-        db_source = 'investment_app.db'
-
-        db_path = os.path.join(db_dir, db_source)
-
-        os.makedirs(db_dir, exist_ok=True)
-
+        db_path = self.establish_path('investment-app.db')
 
         if testing:
             self.db = Database(':memory:')
@@ -48,7 +54,7 @@ class App:
         self.val = Validator(self.serv)
         self.display = Cli(self.serv, self.val, self.vis)
 
-
+    
     # INPUT: None
     # OUTPUT: None
     # PRECONDITION: App object is correctly initialized with proper dependancies
