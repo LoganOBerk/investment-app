@@ -1,5 +1,4 @@
 import secrets
-from tkinter import ACTIVE
 
 from fastapi import APIRouter, HTTPException
 
